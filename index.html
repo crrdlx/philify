@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Philify: Verify Bitcoin Predictions 🦫</title>
-  <script src="https://cdn.jsdelivr.net/npm/parse@4.3.2/dist/parse.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/parse@4.3.2/dist/parse.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -108,6 +108,7 @@
         <th>Name</th>
         <th>Predicted Price (USD)</th>
         <th>Prediction Date</th>
+        <th>Status</th>
         <th>Score</th>
         <th>Action</th>
       </tr>
@@ -157,6 +158,7 @@
             name: result.get('name'),
             price: result.get('price'),
             date: result.get('date'),
+            status: result.get('status'),
             score: result.get('score')
           }));
           renderPredictions();
@@ -175,6 +177,7 @@
             <td>${pred.name}</td>
             <td>$${parseFloat(pred.price).toFixed(2)}</td>
             <td>${pred.date}</td>
+            <td>${pred.status.charAt(0).toUpperCase() + pred.status.slice(1)}</td>
             <td>${pred.score ? pred.score.toFixed(2) : 'Pending'}</td>
             <td><button class="remove-btn" data-id="${pred.id}" data-index="${index}">Remove</button></td>
           `;
@@ -275,19 +278,21 @@
           return;
         }
 
-        // Calculate score if prediction date is today or past
+        // Calculate score and status if prediction date is today or past
         const today = new Date().toISOString().split('T')[0];
         const score = date <= today ? await calculateScore(price, date) : null;
+        const status = date <= today ? 'completed' : 'pending';
 
         // Save to Back4app
         const prediction = new Prediction();
         prediction.set('name', name);
         prediction.set('price', price);
         prediction.set('date', date);
+        prediction.set('status', status);
         prediction.set('score', score);
         try {
           const savedPrediction = await prediction.save();
-          predictions.push({ id: savedPrediction.id, name, price, date, score });
+          predictions.push({ id: savedPrediction.id, name, price, date, status, score });
           renderPredictions();
           document.getElementById('predictionForm').reset();
           document.getElementById('error').textContent = '';
