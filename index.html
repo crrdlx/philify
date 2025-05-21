@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Philify: Verify Bitcoin Predictions 🦫</title>
-  <script defer src="https://cdn.jsdelivr.net/npm/parse@4.3.2/dist/parse.min.js"></script>
+  <script defer src="/parse.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -134,12 +134,20 @@
   </footer>
 
   <script>
-    // Check if Parse is defined
-    if (typeof Parse === 'undefined') {
-      document.getElementById('error').textContent = 'Error: Parse SDK failed to load. Please check your network or try again later.';
-    } else {
-      // Initialize Back4app
-      Parse.initialize("YOUR_BACK4APP_APPLICATION_ID", "YOUR_BACK4APP_JAVASCRIPT_KEY");
+    // Wait for DOM and Parse SDK to load
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof Parse !== 'undefined') {
+        initializeApp();
+      } else {
+        document.getElementById('error').textContent = 'Error: Parse SDK failed to load. Ensure parse.min.js is in /public or check your network.';
+      }
+    });
+
+    function initializeApp() {
+      // Initialize Back4app with your Application ID and JavaScript Key
+      // Replace "YOUR_BACK4APP_APPLICATION_ID" with the Application ID from Back4app (e.g., "abc123456")
+      // Replace "YOUR_BACK4APP_JAVASCRIPT_KEY" with the JavaScript Key from Back4app (e.g., "xyz789012")
+      Parse.initialize("YXOBkc2CDVz3siHn06NozSEBJkyd2UwLkRWPNb5B", "btr8FaPcSSY5XupScZOW5ANBhvdj56d2qJwXXhBi");
       Parse.serverURL = 'https://parseapi.back4app.com/';
 
       // Define Prediction class
