@@ -1,3 +1,4 @@
+// v0.0.3
 const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
@@ -8,6 +9,13 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Add request logging middleware
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+  console.log('Headers:', req.headers);
+  next();
+});
+
 // Rate limiting setup
 const rateLimit = require('express-rate-limit');
 const limiter = rateLimit({
@@ -17,11 +25,18 @@ const limiter = rateLimit({
 
 // Middleware
 app.use(cors({
-  origin: ['https://philify.vercel.app', 'http://localhost:3000'],
-  methods: ['GET', 'POST', 'DELETE'],
+  origin: '*', // Allow all origins during development
+  methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
+// Add error logging middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({ error: err.message });
+});
+
 app.use(express.json());
 app.use(express.static('public'));
 app.use('/api/', limiter); // Apply rate limiting to all API routes
@@ -48,11 +63,14 @@ const db = new sqlite3.Database('predictions.db', (err) => {
 
 // Routes
 app.get('/api/predictions', (req, res) => {
+  console.log('Fetching predictions from database...');
   db.all('SELECT * FROM predictions ORDER BY date DESC', [], (err, rows) => {
     if (err) {
+      console.error('Database error:', err);
       res.status(500).json({ error: err.message });
       return;
     }
+    console.log('Found predictions:', rows);
     res.json(rows);
   });
 });

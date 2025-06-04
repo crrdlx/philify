@@ -1,3 +1,4 @@
+<!-- v0.0.1 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -143,18 +144,37 @@
     // Fetch predictions from API
     async function fetchPredictions() {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/predictions`, {
+        const apiUrl = `${API_BASE_URL}/api/predictions`;
+        console.log('Attempting to fetch from:', apiUrl);
+        
+        const response = await fetch(apiUrl, {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
           },
-          mode: 'cors'
+          mode: 'cors',
+          credentials: 'omit'
         });
-        predictions = await response.json();
+        
+        console.log('Response status:', response.status);
+        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Received predictions:', data);
+        predictions = data;
         renderPredictions();
       } catch (e) {
-        console.error('Error fetching predictions:', e);
-        document.getElementById('error').textContent = 'Error fetching predictions from server.';
+        console.error('Error details:', {
+          message: e.message,
+          stack: e.stack,
+          name: e.name
+        });
+        document.getElementById('error').textContent = `Error fetching predictions: ${e.message}`;
       }
     }
 
