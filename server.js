@@ -19,7 +19,8 @@ const limiter = rateLimit({
 app.use(cors({
   origin: ['https://philify.vercel.app', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'DELETE'],
-  credentials: true
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(express.static('public'));

@@ -143,10 +143,17 @@
     // Fetch predictions from API
     async function fetchPredictions() {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/predictions`);
+        const response = await fetch(`${API_BASE_URL}/api/predictions`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          mode: 'cors'
+        });
         predictions = await response.json();
         renderPredictions();
       } catch (e) {
+        console.error('Error fetching predictions:', e);
         document.getElementById('error').textContent = 'Error fetching predictions from server.';
       }
     }
@@ -234,8 +241,9 @@
         const response = await fetch(`${API_BASE_URL}/api/predictions`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
+          mode: 'cors',
           body: JSON.stringify({ name, price, date })
         });
 
@@ -249,6 +257,7 @@
         document.getElementById('predictionForm').reset();
         document.getElementById('error').textContent = '';
       } catch (e) {
+        console.error('Error saving prediction:', e);
         document.getElementById('error').textContent = 'Error saving prediction.';
       }
     });
