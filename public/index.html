@@ -1,0 +1,402 @@
+<!-- v0.0.1 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Philify: Verify Bitcoin Predictions 🦫</title>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <style>
+    body {
+      background: #fefefe;
+      max-width: 750px;
+      margin: 40px auto;
+      padding: 0 22px;
+      font: 18px/1.5 -apple-system, BlinkMacSystemFont, /* MacOS and iOS */
+                   'avenir next', avenir, /* MacOS and iOS */
+                   'Segoe UI', /* Windows */
+                   'lucida grande', /* Older MacOS */
+                   'helvetica neue', helvetica, /* Older MacOS */
+                   'Fira Sans', /* Firefox OS */
+                   roboto, noto, /* Google stuff */
+                   'Droid Sans', /* Old Google stuff */
+                   cantarell, oxygen, ubuntu, /* Linux stuff */
+                   'franklin gothic medium', 'century gothic', /* Windows stuff */
+                   'Liberation Sans', /* Linux */
+                   sans-serif; /* Everything else */;
+      color: #222;
+    }
+
+    supersize {  /* this is fancified text, but it can be named as anything */
+      font-style: normal;
+      font-size: 120%;
+      color: #ff8c00;
+      text-transform: uppercase;
+    }
+      
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: #333333;
+      font-weight: bold;
+      line-height: 1.2;
+      margin-bottom: 1em;
+      margin-top: 2em;
+    }
+    h1 {
+      font-size: 2.2em;
+      text-align: center;
+    }
+    h2 {
+      font-size: 1.8em;
+      border-bottom: solid 0.1rem firebrick;
+    }
+    h3 {
+      font-size: 1.5em;
+    }
+    h4 {
+      font-size: 1.3em;
+      text-decoration: underline;
+    }
+    h5 {
+      font-size: 1.2em;
+      font-style: italic;
+    }
+    h6 {
+      font-size: 1.1em;
+      margin-bottom: 0.5rem;
+      color: #555555;
+    }
+    img.centered {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    form {
+      margin: 20px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    label {
+      font-weight: bold;
+    }
+    input, button {
+      padding: 8px;
+      font-size: 16px;
+    }
+    input[type="text"], input[type="number"], input[type="date"] {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #457b9d;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1d3557;
+    }
+    .remove-btn {
+      background-color: #e63946;
+    }
+    .remove-btn:hover {
+      background-color: #d00000;
+    }
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+    .error {
+      color: #e63946;
+      font-style: italic;
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      text-align: center;
+    }
+    a {
+      color: #457b9d;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <a name="home_title"></a>
+  <h1 id="this-is-the-doggone-minimal-website"><span style="color:darkorange">Philify</span> - scoring BTC predictions</h1>
+
+  <center>
+    <p>Philify scores people's bitcoin price predictions.</p>
+    <a href="http://185.18.221.147:3000/" class="w3-button w3-round-large w3-orange">Philify at http://185.18.221.147:3000/</a>
+    <a href="/about.html" class="w3-button w3-round-large w3-teal">About Philify</a>
+  </center>
+
+  <!-- Default Statcounter code for Philify - BTC predict
+  scoreboard https://philify.vercel.app -->
+  <script type="text/javascript">
+    var sc_project=13141473;
+    var sc_invisible=1;
+    var sc_security="d917eca5";
+  </script>
+  <script type="text/javascript"
+    src="https://www.statcounter.com/counter/counter.js"
+    async></script>
+  <noscript><div class="statcounter"><a title="Web Analytics
+    Made Easy - Statcounter" href="https://statcounter.com/"
+    target="_blank"><img class="statcounter"
+    src="https://c.statcounter.com/13141473/0/d917eca5/1/"
+    alt="Web Analytics Made Easy - Statcounter"
+    referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+  <!-- End of Statcounter Code -->
+
+  <h2>Add Prediction</h2>
+  <form id="predictionForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" required>
+    <label for="price">Predicted Price (USD):</label>
+    <input type="number" id="price" min="0" step="0.01" required>
+    <label for="date">Prediction Date:</label>
+    <input type="date" id="date" required>
+    <button type="submit">Add Prediction</button>
+  </form>
+
+  <h2>Predictions</h2>
+  <table id="predictionTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Predicted price (USD)</th>
+        <th>Date prediction matures</th>
+        <th>Prediction was created on</th>
+        <th>Price at time of creation (USD)</th>
+        <th>Status</th>
+        <th>Score</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="predictionBody"></tbody>
+  </table>
+
+  <h2>Philify Scoreboard 📊</h2>
+  <table id="scoreboardTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Average Score</th>
+        <th>Prediction Count</th>
+      </tr>
+    </thead>
+    <tbody id="scoreboardBody"></tbody>
+  </table>
+  <p id="error" class="error"></p>
+
+  <footer>
+    <p>Philify: Don't trust, verify. Named after Punxsutawney Phil, we score Bitcoin predictions to hold prognosticators accountable 🦫.</p>
+  </footer>
+
+  <script>
+    // API base URL - replace with your VPS IP or domain
+    const API_BASE_URL = 'http://185.18.221.147:3000';
+    console.log('API Base URL:', API_BASE_URL); // Debug log
+
+    // Store predictions locally for rendering
+    let predictions = [];
+
+    // Format date for display
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      // Add one day to compensate for UTC conversion
+      date.setDate(date.getDate() + 1);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    }
+
+    // Fetch predictions from API
+    async function fetchPredictions() {
+      try {
+        const apiUrl = `${API_BASE_URL}/api/predictions`;
+        console.log('Attempting to fetch from:', apiUrl);
+        
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          mode: 'cors',
+          credentials: 'omit'
+        });
+        
+        console.log('Response status:', response.status);
+        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Received predictions:', data);
+        predictions = data;
+        renderPredictions();
+      } catch (e) {
+        console.error('Error details:', {
+          message: e.message,
+          stack: e.stack
+        });
+        document.getElementById('error').textContent = 'Error fetching predictions: ' + e.message;
+      }
+    }
+
+    // Render predictions in the table
+    function renderPredictions() {
+      const tbody = document.getElementById('predictionBody');
+      tbody.innerHTML = '';
+      
+      predictions.forEach(prediction => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${prediction.name}</td>
+          <td>$${prediction.price.toLocaleString()}</td>
+          <td>${formatDate(prediction.date)}</td>
+          <td>${formatDate(prediction.created_at)}</td>
+          <td>$${prediction.current_price.toLocaleString()}</td>
+          <td>${prediction.status}</td>
+          <td>${prediction.score !== null ? prediction.score.toFixed(2) : 'Pending'}</td>
+          <td>
+            <button class="remove-btn" onclick="deletePrediction(${prediction.id})">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      // Update scoreboard
+      renderScoreboard();
+    }
+
+    // Calculate and display scoreboard
+    function renderScoreboard() {
+      const scoreboard = {};
+      
+      // Calculate average scores for each person
+      predictions.forEach(prediction => {
+        if (!scoreboard[prediction.name]) {
+          scoreboard[prediction.name] = {
+            totalScore: 0,
+            count: 0
+          };
+        }
+        if (prediction.score !== null) {
+          scoreboard[prediction.name].totalScore += prediction.score;
+          scoreboard[prediction.name].count++;
+        }
+      });
+      
+      // Sort by average score
+      const sortedScores = Object.entries(scoreboard)
+        .map(([name, data]) => ({
+          name,
+          averageScore: data.count > 0 ? data.totalScore / data.count : 0,
+          count: data.count
+        }))
+        .sort((a, b) => b.averageScore - a.averageScore);
+      
+      // Render scoreboard
+      const tbody = document.getElementById('scoreboardBody');
+      tbody.innerHTML = '';
+      
+      sortedScores.forEach(score => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${score.name}</td>
+          <td>${score.averageScore.toFixed(2)}</td>
+          <td>${score.count}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Handle form submission
+    document.getElementById('predictionForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const price = parseFloat(document.getElementById('price').value);
+      const date = document.getElementById('date').value;
+      
+      // Adjust the date to account for timezone
+      const adjustedDate = new Date(date);
+      adjustedDate.setDate(adjustedDate.getDate() + 1);
+      const formattedDate = adjustedDate.toISOString().split('T')[0];
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/predictions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name,
+            price,
+            date: formattedDate
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to add prediction');
+        }
+
+        // Clear form
+        document.getElementById('name').value = '';
+        document.getElementById('price').value = '';
+        document.getElementById('date').value = '';
+
+        // Refresh predictions
+        await fetchPredictions();
+      } catch (e) {
+        console.error('Error adding prediction:', e);
+        document.getElementById('error').textContent = 'Error adding prediction: ' + e.message;
+      }
+    });
+
+    // Initial fetch and render
+    fetchPredictions();
+
+    const calculateScore = (predictedPrice, predictionDate) => {
+      const daysDiff = Math.max(0, (todayDateObj - predictionDateObj) / (1000 * 60 * 60 * 24));
+      
+      // Base time weight with exponential growth
+      const timeWeight = Math.pow(daysDiff + 1, 0.5) / Math.pow(365 + 1, 0.5);
+      
+      // Short-term bonus (up to 0.7x for very short predictions)
+      const shortTermBonus = daysDiff <= 7 ? (7 - daysDiff) * 0.1 : 0;
+      
+      // Accuracy bonus for short-term predictions
+      const accuracyBonus = daysDiff <= 7 && percentageError < 5 ? 20 : 0;
+      
+      // Calculate final score
+      let score = Math.max(0, 100 - percentageError) * (1 + timeWeight + shortTermBonus) + accuracyBonus;
+      return Math.max(0, Math.min(100, score)); // Cap between 0 and 100
+    };
+  </script>
+</body>
+</html> 

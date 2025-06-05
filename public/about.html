@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>About Philify - Bitcoin Price Predictions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+    body {
+      background: #fefefe;
+      max-width: 750px;
+      margin: 40px auto;
+      padding: 0 22px;
+      font: 18px/1.5 -apple-system, BlinkMacSystemFont, 'avenir next', avenir, 'Segoe UI', 'lucida grande', 'helvetica neue', helvetica, 'Fira Sans', roboto, noto, 'Droid Sans', cantarell, oxygen, ubuntu, 'franklin gothic medium', 'century gothic', 'Liberation Sans', sans-serif;
+      color: #222;
+    }
+      
+    h1, h2, h3, h4, h5, h6 {
+      color: #333333;
+      font-weight: bold;
+      line-height: 1.2;
+      margin-bottom: 1em;
+      margin-top: 2em;
+    }
+    h1 {
+      font-size: 2.2em;
+      text-align: center;
+    }
+    h2 {
+      font-size: 1.8em;
+      border-bottom: solid 0.1rem firebrick;
+    }
+    h3 {
+      font-size: 1.5em;
+    }
+    h4 {
+      font-size: 1.3em;
+      text-decoration: underline;
+    }
+    
+    .formula {
+      background-color: #f5f5f5;
+      padding: 20px;
+      border-radius: 5px;
+      margin: 20px 0;
+      font-family: monospace;
+    }
+    
+    .example {
+      background-color: #e8f4f8;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+    
+    .nav-link {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    
+    .nav-link:hover {
+      text-decoration: underline;
+    }
+    </style>
+  </head>
+
+<body>
+<a name="top"></a>
+
+<h1>About <span style="color:darkorange"><strong>Philify</strong></span></h1>
+
+<p style="text-align:center">A platform for tracking Bitcoin price predictions and measuring prediction accuracy.</p>
+
+<h2>Why Philify?</h2>
+<p>Philify is named after Punxsutawney Phil, the "Seer of Seers, Prognosticator of Prognosticators" from Groundhog Day. Just as Phil makes his annual weather prediction, anyone can make Bitcoin price predictions. But unlike Phil, who only predicts once a year, or weather forecasters who can make new predictions daily, Philify holds predictors accountable by scoring their predictions.</p>
+
+<p>The name also plays on Bitcoin's famous mantra "Don't trust, verify." With Philify, we say "Don't trust, Philify" - because we believe in verifying predictions through a transparent scoring system rather than taking them at face value.</p>
+
+<h2>What is Philify?</h2>
+<p>Philify is a web application that allows users to make Bitcoin price predictions and tracks their accuracy over time. The platform provides a fair and transparent scoring system that rewards both prediction accuracy and the time horizon of predictions.</p>
+
+<h2>How the Scoring System Works</h2>
+<p>The scoring system is designed to balance two key factors:</p>
+<ol>
+  <li><strong>Prediction Accuracy:</strong> How close your prediction is to the actual Bitcoin price</li>
+  <li><strong>Time Horizon:</strong> How far into the future you made your prediction</li>
+</ol>
+
+<h3>The Scoring Formula</h3>
+<div class="formula">
+Score = (100 - Percentage Error) × (1 + Time Weight)
+</div>
+
+<p>Where:</p>
+<ul>
+  <li><strong>Percentage Error</strong> = |Predicted Price - Actual Price| / Actual Price × 100</li>
+  <li><strong>Time Weight</strong> = log(days + 1) / log(366)</li>
+</ul>
+
+<h3>Example Calculation</h3>
+<div class="example">
+<p>Let's say you predict Bitcoin will be $50,000 in 30 days:</p>
+<ul>
+  <li>If the actual price is $48,000:</li>
+  <li>Percentage Error = |$50,000 - $48,000| / $48,000 × 100 = 4.17%</li>
+  <li>Time Weight = log(30 + 1) / log(366) ≈ 0.45</li>
+  <li>Score = (100 - 4.17) × (1 + 0.45) = 95.83 × 1.45 ≈ 139</li>
+  <li>Final Score = 100 (capped at maximum)</li>
+</ul>
+</div>
+
+<h2>Key Features</h2>
+<ul>
+  <li>Make predictions for any future date</li>
+  <li>Track prediction accuracy automatically</li>
+  <li>Score calculation based on both accuracy and time horizon</li>
+  <li>Real-time Bitcoin price data from CoinGecko</li>
+  <li>Simple and intuitive interface</li>
+</ul>
+
+<h2>Tips for Better Predictions</h2>
+<ul>
+  <li>Consider market trends and historical patterns</li>
+  <li>Take into account upcoming events that might affect Bitcoin's price</li>
+  <li>Remember that longer-term predictions have a higher potential score</li>
+  <li>Balance between ambitious predictions and realistic targets</li>
+</ul>
+
+<h2>Technical Details</h2>
+<p>The application uses:</p>
+<ul>
+  <li>Node.js and Express for the backend</li>
+  <li>SQLite for data storage</li>
+  <li>CoinGecko API for real-time Bitcoin price data</li>
+  <li>Simple and responsive frontend design</li>
+</ul>
+
+<p style="text-align:center"><a href="/" class="nav-link">← Back to Predictions</a></p>
+
+<p style="text-align:center"><a href="#top">Jump to top of page</a></p>
+
+</body>
+</html> 
