@@ -47,6 +47,31 @@ app.use(express.json());
 app.use(express.static('public'));
 app.use('/api/', limiter); // Apply rate limiting to all API routes
 
+// Add a debug endpoint to view database contents
+app.get('/api/debug/db', (req, res) => {
+  console.log('Fetching all database contents...');
+  db.all('SELECT * FROM predictions ORDER BY created_at DESC', [], (err, rows) => {
+    if (err) {
+      console.error('Database error:', err);
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    // Format the response to be more readable
+    const formattedRows = rows.map(row => ({
+      id: row.id,
+      name: row.name,
+      price: row.price,
+      date: row.date,
+      status: row.status,
+      score: row.score,
+      current_price: row.current_price,
+      source: row.source,
+      created_at: row.created_at
+    }));
+    res.json(formattedRows);
+  });
+});
+
 // Database setup
 const db = new sqlite3.Database('predictions.db', (err) => {
   if (err) {

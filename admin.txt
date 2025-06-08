@@ -1,0 +1,15 @@
+http://185.18.221.147:3000 or http://vm-182.lnvps.net:3000
+
+Ways to check the database:
+1. Through the API endpoint:
+- You can access http://185.18.221.147:3000/api/debug/db directly in your browser
+- This will show the raw JSON data from the database
+2. Through a new debug page:
+- Access http://185.18.221.147:3000/debug.html
+- This provides a more user-friendly interface with:
+.A formatted table view of all database entries
+.A refresh button to update the data
+.Timestamp showing when the data was last updated
+.Clickable source links
+.Formatted dates and numbers
+.Navigation links back to the main pages
