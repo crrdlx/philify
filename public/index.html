@@ -169,11 +169,11 @@
 
   <h2>Add Prediction</h2>
   <form id="predictionForm">
-    <label for="name">Name:</label>
+    <label for="name">Name of predictor:</label>
     <input type="text" id="name" required>
     <label for="price">Predicted Price (USD):</label>
     <input type="number" id="price" min="0" step="0.01" required>
-    <label for="date">Prediction Date:</label>
+    <label for="date">Prediction maturity date:</label>
     <input type="date" id="date" required>
     <label for="source">Source (optional):</label>
     <input type="url" id="source" placeholder="URL of prediction">
@@ -225,6 +225,16 @@
 
     // Format date for display
     function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    }
+
+    // Format maturity date for display (adds one day)
+    function formatMaturityDate(dateString) {
       const date = new Date(dateString);
       // Add one day to compensate for UTC conversion
       date.setDate(date.getDate() + 1);
@@ -285,7 +295,7 @@
         row.innerHTML = `
           <td>${prediction.name}</td>
           <td>$${prediction.price.toLocaleString()}</td>
-          <td>${formatDate(prediction.date)}</td>
+          <td>${formatMaturityDate(prediction.date)}</td>
           <td>${formatDate(prediction.created_at)}</td>
           <td>$${prediction.current_price.toLocaleString()}</td>
           <td>${sourceCell}</td>
