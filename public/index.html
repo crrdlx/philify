@@ -296,18 +296,25 @@
       tbody.innerHTML = '';
       
       predictions.forEach(prediction => {
+        console.log('Processing prediction:', prediction); // Debug log
         const row = document.createElement('tr');
         let sourceCell = '';
         
         if (prediction.source) {
+          console.log('Source URL:', prediction.source); // Debug log
           try {
             const urlObj = new URL(prediction.source);
+            console.log('Parsed URL:', urlObj); // Debug log
             const displayText = urlObj.hostname + (urlObj.pathname.length > 20 ? '...' : urlObj.pathname);
             sourceCell = `<a href="${prediction.source}" target="_blank" title="${prediction.source}">${displayText}</a>`;
-          } catch {
+            console.log('Generated source cell:', sourceCell); // Debug log
+          } catch (e) {
+            console.error('URL parsing error:', e); // Debug log
             // If URL parsing fails, just show the raw URL
             sourceCell = `<a href="${prediction.source}" target="_blank" title="${prediction.source}">${prediction.source.length > 30 ? prediction.source.substring(0, 27) + '...' : prediction.source}</a>`;
           }
+        } else {
+          console.log('No source URL for prediction'); // Debug log
         }
         
         row.innerHTML = `
