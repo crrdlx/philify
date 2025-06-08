@@ -28,13 +28,19 @@ app.use(cors({
   origin: '*', // Allow all origins during development
   methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['Content-Type', 'Authorization'],
+  maxAge: 86400 // Cache preflight requests for 24 hours
 }));
 
 // Add error logging middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
-  res.status(500).json({ error: err.message });
+  if (err.name === 'CORSError') {
+    res.status(403).json({ error: 'CORS error: ' + err.message });
+  } else {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.use(express.json());
