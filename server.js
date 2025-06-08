@@ -56,6 +56,7 @@ const db = new sqlite3.Database('predictions.db', (err) => {
       status TEXT NOT NULL,
       score REAL,
       current_price REAL,
+      source TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
   }
@@ -76,7 +77,7 @@ app.get('/api/predictions', (req, res) => {
 });
 
 app.post('/api/predictions', async (req, res) => {
-  const { name, price, date } = req.body;
+  const { name, price, date, source } = req.body;
   
   if (!name || !price || !date) {
     res.status(400).json({ error: 'Missing required fields' });
@@ -110,8 +111,8 @@ app.post('/api/predictions', async (req, res) => {
     const score = date <= today ? await calculateScore(price, date) : null;
 
     db.run(
-      'INSERT INTO predictions (name, price, date, status, score, current_price) VALUES (?, ?, ?, ?, ?, ?)',
-      [name, price, date, status, score, priceAtPrediction],
+      'INSERT INTO predictions (name, price, date, status, score, current_price, source) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [name, price, date, status, score, priceAtPrediction, source || null],
       function(err) {
         if (err) {
           console.error('Database error saving prediction:', err);
@@ -126,7 +127,8 @@ app.post('/api/predictions', async (req, res) => {
           date,
           status,
           score,
-          current_price: priceAtPrediction
+          current_price: priceAtPrediction,
+          source: source || null
         });
       }
     );
