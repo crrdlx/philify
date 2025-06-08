@@ -108,39 +108,52 @@ app.get('/api/predictions', (req, res) => {
 });
 
 app.post('/api/predictions', async (req, res) => {
+  console.log('Received prediction request:', req.body);
   const { name, price, date, source } = req.body;
   
   if (!name || !price || !date) {
+    console.log('Missing required fields:', { name, price, date });
     res.status(400).json({ error: 'Missing required fields' });
     return;
   }
 
   try {
+    console.log('Fetching current Bitcoin price...');
     // Get current Bitcoin price at the time of prediction
     const currentPriceResponse = await fetch('https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=1', {
       headers: {
-        'x-cg-pro-api-key': process.env.COINGECKO_API_KEY
+        'x-cg-pro-api-key': process.env.COINGECKO_API_KEY || ''
       }
     });
     
+    console.log('CoinGecko response status:', currentPriceResponse.status);
+    
     if (!currentPriceResponse.ok) {
-      console.error('Failed to fetch current Bitcoin price for new prediction:', await currentPriceResponse.text());
+      const errorText = await currentPriceResponse.text();
+      console.error('Failed to fetch current Bitcoin price for new prediction:', errorText);
       throw new Error('Failed to fetch current Bitcoin price');
     }
     
     const currentPriceData = await currentPriceResponse.json();
+    console.log('CoinGecko response data:', currentPriceData);
+    
     // Ensure data format is correct for current price
     if (!currentPriceData.prices || !currentPriceData.prices[0]) {
-         console.error('Unexpected data format for current price API on new prediction:', currentPriceData);
-         throw new Error('Unexpected data format from CoinGecko (current price)');
+      console.error('Unexpected data format for current price API on new prediction:', currentPriceData);
+      throw new Error('Unexpected data format from CoinGecko (current price)');
     }
     const priceAtPrediction = currentPriceData.prices[0][1];
+    console.log('Current Bitcoin price:', priceAtPrediction);
 
     const today = new Date().toISOString().split('T')[0];
     const status = date <= today ? 'completed' : 'pending';
+    console.log('Prediction status:', status);
+    
     // Calculate score only if the date is today or in the past
     const score = date <= today ? await calculateScore(price, date) : null;
+    console.log('Calculated score:', score);
 
+    console.log('Saving prediction to database...');
     db.run(
       'INSERT INTO predictions (name, price, date, status, score, current_price, source) VALUES (?, ?, ?, ?, ?, ?, ?)',
       [name, price, date, status, score, priceAtPrediction, source || null],

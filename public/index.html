@@ -382,17 +382,24 @@
     // Handle form submission
     document.getElementById('predictionForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      console.log('Form submitted'); // Debug log
+      
       const name = document.getElementById('name').value;
       const price = parseFloat(document.getElementById('price').value);
       const date = document.getElementById('date').value;
       const source = document.getElementById('source').value;
       
+      console.log('Form values:', { name, price, date, source }); // Debug log
+      
       // Adjust the date to account for timezone
       const adjustedDate = new Date(date);
       adjustedDate.setDate(adjustedDate.getDate() + 1);
       const formattedDate = adjustedDate.toISOString().split('T')[0];
+      
+      console.log('Adjusted date:', formattedDate); // Debug log
 
       try {
+        console.log('Sending request to:', `${API_BASE_URL}/api/predictions`); // Debug log
         const response = await fetch(`${API_BASE_URL}/api/predictions`, {
           method: 'POST',
           headers: {
@@ -409,11 +416,17 @@
           })
         });
 
+        console.log('Response status:', response.status); // Debug log
+        console.log('Response headers:', Object.fromEntries(response.headers.entries())); // Debug log
+
         if (!response.ok) {
           const errorText = await response.text();
           console.error('Server response:', errorText);
           throw new Error(`Failed to add prediction: ${errorText}`);
         }
+
+        const responseData = await response.json();
+        console.log('Server response data:', responseData); // Debug log
 
         // Clear form
         document.getElementById('name').value = '';
