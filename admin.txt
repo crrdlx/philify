@@ -1,4 +1,4 @@
-http://185.18.221.147:3000 or http://vm-182.lnvps.net:3000
+http://185.18.221.147:3000 or http://vm-182.lnvps.cloud:3000
 
 Ways to check the database:
 1. Through the API endpoint:

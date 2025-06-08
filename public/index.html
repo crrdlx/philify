@@ -297,9 +297,18 @@
       
       predictions.forEach(prediction => {
         const row = document.createElement('tr');
-        const sourceCell = prediction.source 
-          ? `<a href="${prediction.source}" target="_blank" title="${prediction.source}">${shortenUrl(prediction.source)}</a>`
-          : '';
+        let sourceCell = '';
+        
+        if (prediction.source) {
+          try {
+            const urlObj = new URL(prediction.source);
+            const displayText = urlObj.hostname + (urlObj.pathname.length > 20 ? '...' : urlObj.pathname);
+            sourceCell = `<a href="${prediction.source}" target="_blank" title="${prediction.source}">${displayText}</a>`;
+          } catch {
+            // If URL parsing fails, just show the raw URL
+            sourceCell = `<a href="${prediction.source}" target="_blank" title="${prediction.source}">${prediction.source.length > 30 ? prediction.source.substring(0, 27) + '...' : prediction.source}</a>`;
+          }
+        }
         
         row.innerHTML = `
           <td>${prediction.name}</td>
@@ -319,16 +328,6 @@
       
       // Update scoreboard
       renderScoreboard();
-    }
-
-    // Function to shorten URLs for display
-    function shortenUrl(url) {
-      try {
-        const urlObj = new URL(url);
-        return urlObj.hostname + (urlObj.pathname.length > 20 ? '...' : urlObj.pathname);
-      } catch {
-        return url.length > 30 ? url.substring(0, 27) + '...' : url;
-      }
     }
 
     // Calculate and display scoreboard
