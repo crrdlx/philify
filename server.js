@@ -47,6 +47,27 @@ app.use(express.json());
 app.use(express.static('public'));
 app.use('/api/', limiter); // Apply rate limiting to all API routes
 
+// Database setup
+const db = new sqlite3.Database('predictions.db', (err) => {
+  if (err) {
+    console.error('Error opening database:', err);
+  } else {
+    console.log('Connected to SQLite database');
+    // Create predictions table if it doesn't exist
+    db.run(`CREATE TABLE IF NOT EXISTS predictions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      price REAL NOT NULL,
+      date TEXT NOT NULL,
+      status TEXT NOT NULL,
+      score REAL,
+      current_price REAL,
+      source TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`);
+  }
+});
+
 // Add a debug endpoint to view database contents
 app.get('/api/debug/db', (req, res) => {
   console.log('Fetching all database contents...');
@@ -70,27 +91,6 @@ app.get('/api/debug/db', (req, res) => {
     }));
     res.json(formattedRows);
   });
-});
-
-// Database setup
-const db = new sqlite3.Database('predictions.db', (err) => {
-  if (err) {
-    console.error('Error opening database:', err);
-  } else {
-    console.log('Connected to SQLite database');
-    // Create predictions table if it doesn't exist
-    db.run(`CREATE TABLE IF NOT EXISTS predictions (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      price REAL NOT NULL,
-      date TEXT NOT NULL,
-      status TEXT NOT NULL,
-      score REAL,
-      current_price REAL,
-      source TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
-  }
 });
 
 // Routes

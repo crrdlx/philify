@@ -1,6 +1,7 @@
 http://185.18.221.147:3000 or http://vm-182.lnvps.cloud:3000
 
-Ways to check the database:
+WAYS TO CHECK THE DATABASE:
+
 1. Through the API endpoint:
 - You can access http://185.18.221.147:3000/api/debug/db directly in your browser
 - This will show the raw JSON data from the database
@@ -13,3 +14,8 @@ Ways to check the database:
 .Clickable source links
 .Formatted dates and numbers
 .Navigation links back to the main pages
+
+TO END THE PROCESS
+
+lsof -i :3000  // to find the process pid
+kill <PID>  // enter the number for <PID>
