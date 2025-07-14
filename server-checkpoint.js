@@ -1,4 +1,4 @@
-// v0.0.5
+// v0.0.4
 const express = require('express');
 const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
@@ -373,4 +373,4 @@ app.listen(port, '0.0.0.0', () => {
   updateDuePredictions();
 });
 console.log('Server starting...'); 
-// v0.0.5
+// v0.0.4
