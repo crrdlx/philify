@@ -44,7 +44,7 @@ app.use((err, req, res, next) => {
 });
 
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('.'));
 app.use('/api/', limiter); // Apply rate limiting to all API routes
 
 // Database setup
@@ -64,7 +64,36 @@ const db = new sqlite3.Database('predictions.db', (err) => {
       current_price REAL,
       source TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
+    )`, (err) => {
+      if (err) {
+        console.error('Error creating table:', err);
+      } else {
+        console.log('Table creation/verification completed');
+        // Check if source column exists and add it if it doesn't
+        db.all("PRAGMA table_info(predictions)", (err, columns) => {
+          if (err) {
+            console.error('Error getting table columns:', err);
+            return;
+          }
+          
+          console.log('Current table columns:', columns.map(col => col.name));
+          
+          const hasSourceColumn = columns.some(col => col.name === 'source');
+          console.log('Has source column:', hasSourceColumn);
+          
+          if (!hasSourceColumn) {
+            console.log('Adding source column to predictions table...');
+            db.run("ALTER TABLE predictions ADD COLUMN source TEXT", (err) => {
+              if (err) {
+                console.error('Error adding source column:', err);
+              } else {
+                console.log('Successfully added source column');
+              }
+            });
+          }
+        });
+      }
+    });
   }
 });
 
