@@ -186,7 +186,7 @@
       <tr>
         <th>Name</th>
         <th>Predicted price (USD)</th>
-        <th>Date prediction matures</th>
+        <th>Date prediction matures (11:59:59pm)</th>
         <th>Prediction was created on</th>
         <th>Price at time of creation (USD)</th>
         <th>Source</th>
@@ -233,11 +233,9 @@
       });
     }
 
-    // Format maturity date for display (adds one day)
+    // Format maturity date for display (matures next day, just after 11:59:59pm)
     function formatMaturityDate(dateString) {
       const date = new Date(dateString);
-      // Add one day to compensate for UTC conversion
-      date.setDate(date.getDate() + 1);
       return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
